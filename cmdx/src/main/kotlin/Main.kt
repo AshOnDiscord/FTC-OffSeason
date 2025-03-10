@@ -1,4 +1,4 @@
-package com.millburnx
+package com.millburnx.cmdx
 
 /**
  * Sample main function

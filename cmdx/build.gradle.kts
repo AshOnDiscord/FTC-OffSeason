@@ -22,3 +22,8 @@ kotlin {
     jvmToolchain(21)
     explicitApi()
 }
+
+detekt {
+    config.from(files("$rootDir/cmdx/detekt.yml"))
+    source.from(files("src/main/kotlin"))
+}

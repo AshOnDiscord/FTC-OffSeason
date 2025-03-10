@@ -1,0 +1,3 @@
+style:
+  InvalidPackageDeclaration:
+    active: false
