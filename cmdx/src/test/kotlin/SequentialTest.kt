@@ -1,7 +1,7 @@
 import com.millburnx.cmdx.commandGroups.Sequential
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -25,7 +25,7 @@ class SequentialTest {
                 }
             }
 
-        runBlocking {
+        runTest {
             sequential.run(this)
         }
 
@@ -34,7 +34,7 @@ class SequentialTest {
 
     @Test
     fun `sequential cancels commands`() =
-        runBlocking {
+        runTest {
             var result = ""
             val sequential =
                 Sequential("sequential.cancel") {
@@ -67,7 +67,7 @@ class SequentialTest {
 
     @Test
     fun `sequential cancels commands when scope is cancelled`() =
-        runBlocking {
+        runTest {
             var result = ""
             val sequential =
                 Sequential("scope.cancel") {
@@ -119,10 +119,84 @@ class SequentialTest {
                 }
             }
 
-        runBlocking {
+        runTest {
             sequential.run(this)
         }
 
         assertEquals("abcd", result)
     }
+
+    @Test
+    fun `sequential cancels nested command groups`() =
+        runTest {
+            var result = ""
+            val sequential =
+                Sequential("nested.cancel") {
+                    Command("a") {
+                        delay(100)
+                        result += "a"
+                    }
+                    +Sequential("nested.cancel") {
+                        Command("b") {
+                            delay(75)
+                            result += "b"
+                        }
+                        Command("c") {
+                            delay(25)
+                            result += "c"
+                        }
+                    }
+                    Command("d") {
+                        delay(50)
+                        result += "d"
+                    }
+                }
+
+            val job =
+                launch {
+                    sequential.run(this)
+                }
+
+            delay(185)
+
+            sequential.cancel()
+            job.join()
+
+            assertEquals("ab", result)
+        }
+
+    @Test
+    fun `sequential cancels nested command groups when scope is cancelled`() =
+        runTest {
+            var result = ""
+            val sequential =
+                Sequential("nested.cancel") {
+                    Command("a") {
+                        delay(100)
+                        result += "a"
+                    }
+                    +Sequential("nested.cancel") {
+                        Command("b") {
+                            delay(75)
+                            result += "b"
+                        }
+                        Command("c") {
+                            delay(25)
+                            result += "c"
+                        }
+                    }
+                    Command("d") {
+                        delay(50)
+                        result += "d"
+                    }
+                }
+            val job =
+                launch {
+                    sequential.run(this)
+                }
+            delay(185)
+            job.cancel()
+            job.join()
+            assertEquals("ab", result)
+        }
 }
