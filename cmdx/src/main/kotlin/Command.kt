@@ -7,11 +7,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
+public interface ICommand {
+    public suspend fun run(scope: CoroutineScope)
+
+    public fun cancel()
+}
+
 public abstract class Command(
     public val name: String,
     public val onCancel: () -> Unit = {},
     public val runnable: suspend () -> Unit,
-) {
+) : ICommand {
     private val synchChanel = Channel<Unit>()
     public lateinit var job: Job
 
@@ -21,7 +27,7 @@ public abstract class Command(
         return !synchChanel.isClosedForReceive
     }
 
-    public suspend fun run(scope: CoroutineScope) {
+    public override suspend fun run(scope: CoroutineScope) {
         job =
             scope.launch {
                 try {
@@ -39,7 +45,7 @@ public abstract class Command(
         job.join()
     }
 
-    public fun cancel() {
+    public override fun cancel() {
         if (::job.isInitialized) {
             job.cancel()
         }

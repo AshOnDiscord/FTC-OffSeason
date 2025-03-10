@@ -1,18 +1,19 @@
 package com.millburnx.cmdx.commandGroups
 
 import com.millburnx.cmdx.Command
+import com.millburnx.cmdx.ICommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlin.collections.forEach
 
 public abstract class CommandGroup(
     public val name: String,
-) {
-    protected val commands: MutableList<Command> = mutableListOf()
+) : ICommand {
+    protected val commands: MutableList<ICommand> = mutableListOf()
 
     public var currentScope: CoroutineScope? = null
 
-    public operator fun Command.unaryPlus() {
+    public operator fun ICommand.unaryPlus() {
         commands.add(this)
     }
 
@@ -26,9 +27,9 @@ public abstract class CommandGroup(
         commands.add(object : Command(name, onCancel, block) {})
     }
 
-    public abstract suspend fun run(scope: CoroutineScope)
+    public abstract override suspend fun run(scope: CoroutineScope)
 
-    public fun cancel() {
+    public override fun cancel() {
         commands.forEach { it.cancel() }
         currentScope?.cancel()
     }

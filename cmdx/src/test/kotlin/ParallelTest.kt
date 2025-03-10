@@ -95,4 +95,32 @@ class ParallelTest {
 
             assertEquals("a", result)
         }
+
+    @Test
+    fun `Handle nested parallel commands`() {
+        var result = ""
+        val parallel =
+            Parallel("nested.parallel") {
+                Command("c") {
+                    delay(100)
+                    result += "c"
+                }
+                +Parallel("nested.parallel") {
+                    Command("a") {
+                        delay(50)
+                        result += "a"
+                    }
+                    Command("b") {
+                        delay(75)
+                        result += "b"
+                    }
+                }
+            }
+
+        runBlocking {
+            parallel.run(this)
+        }
+
+        assertEquals("abc", result)
+    }
 }

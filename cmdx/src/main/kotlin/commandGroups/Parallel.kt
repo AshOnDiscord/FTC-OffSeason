@@ -5,7 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 public class Parallel(
-    name: String,
+    name: String = "Unnamed Parallel",
     public val block: Parallel.() -> Unit,
 ) : CommandGroup(name) {
     init {

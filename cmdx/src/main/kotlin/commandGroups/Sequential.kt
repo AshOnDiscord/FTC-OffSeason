@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.isActive
 
 public class Sequential(
-    name: String,
+    name: String = "Unnamed Sequential",
     public val block: Sequential.() -> Unit,
 ) : CommandGroup(name) {
     init {

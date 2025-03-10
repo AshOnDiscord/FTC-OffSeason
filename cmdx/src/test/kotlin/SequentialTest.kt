@@ -93,4 +93,36 @@ class SequentialTest {
             job.join()
             assertEquals("", result)
         }
+
+    @Test
+    fun `Handle nested sequential commands`() {
+        var result = ""
+        val sequential =
+            Sequential("nested") {
+                Command("a") {
+                    delay(100)
+                    result += "a"
+                }
+                +Sequential("nested child") {
+                    Command("b") {
+                        delay(75)
+                        result += "b"
+                    }
+                    Command("c") {
+                        delay(25)
+                        result += "c"
+                    }
+                }
+                Command("d") {
+                    delay(50)
+                    result += "d"
+                }
+            }
+
+        runBlocking {
+            sequential.run(this)
+        }
+
+        assertEquals("abcd", result)
+    }
 }
