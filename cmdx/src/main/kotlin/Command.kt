@@ -13,8 +13,8 @@ public interface ICommand {
     public fun cancel()
 }
 
-public abstract class Command(
-    public val name: String,
+public open class Command(
+    public val name: String = "Unnamed Command",
     public val onCancel: () -> Unit = {},
     public val runnable: suspend () -> Unit,
 ) : ICommand {
@@ -50,4 +50,8 @@ public abstract class Command(
             job.cancel()
         }
     }
+}
+
+public class EmptyCommand : Command("Empty Command", {}, {}) {
+    override suspend fun run(scope: CoroutineScope) {}
 }
