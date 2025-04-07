@@ -20,25 +20,25 @@ public class Conditional(
     public constructor(
         name: String,
         condition: () -> Boolean,
-        ifTrue: () -> Unit,
-        ifFalse: () -> Unit,
+        ifTrue: Command.() -> Unit,
+        ifFalse: Command.() -> Unit,
     ) : this(name, condition, CmdxCommand(name, {}, ifTrue), CmdxCommand(name, {}, ifFalse))
 
     public constructor(
         condition: () -> Boolean,
-        ifTrue: () -> Unit,
-        ifFalse: () -> Unit,
+        ifTrue: Command.() -> Unit,
+        ifFalse: Command.() -> Unit,
     ) : this("Unnamed Conditional", condition, CmdxCommand("", {}, ifTrue), CmdxCommand("", {}, ifFalse))
 
     public constructor(
         name: String,
         condition: () -> Boolean,
-        ifTrue: () -> Unit,
+        ifTrue: Command.() -> Unit,
     ) : this(name, condition, CmdxCommand(name, {}, ifTrue), EmptyCommand())
 
     public constructor(
         condition: () -> Boolean,
-        ifTrue: () -> Unit,
+        ifTrue: Command.() -> Unit,
     ) : this("Unnamed Conditional", condition, CmdxCommand("", {}, ifTrue), EmptyCommand())
 
     override suspend fun run(scope: CoroutineScope) {
