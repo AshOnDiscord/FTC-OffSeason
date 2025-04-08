@@ -54,6 +54,8 @@ public open class Command(
     }
 }
 
+public typealias CommandS = Command
+
 public class EmptyCommand : Command("Empty Command", {}, {}) {
     override suspend fun run(scope: CoroutineScope) {}
 }

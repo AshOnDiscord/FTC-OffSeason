@@ -15,6 +15,7 @@ public class ParallelDeadline(
 
     init {
         block()
+        deadline.parentGroup = this
     }
 
     public override suspend fun run(scope: CoroutineScope) {
