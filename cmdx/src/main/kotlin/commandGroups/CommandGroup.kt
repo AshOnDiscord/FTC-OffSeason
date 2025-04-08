@@ -2,6 +2,7 @@ package com.millburnx.cmdx.commandGroups
 
 import com.millburnx.cmdx.Command
 import com.millburnx.cmdx.ICommand
+import jdk.internal.org.jline.keymap.KeyMap.key
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -16,12 +17,13 @@ public abstract class CommandGroup(
     public var currentScope: CoroutineScope? = null
     override var parentGroup: CommandGroup? = null
 
-    public val channelsRaw: MutableMap<String, Channel<Unit>> = hashMapOf<String, Channel<Unit>>()
-    public val channels: MutableMap<String, Channel<Unit>> = Collections.synchronizedMap(channelsRaw)
+    private val channelsRaw: MutableMap<String, Channel<Unit>> = hashMapOf<String, Channel<Unit>>()
+    private val localChannels: MutableMap<String, Channel<Unit>> = Collections.synchronizedMap(channelsRaw)
+    public val channels: MutableMap<String, Channel<Unit>>
+        get() = if (parentGroup != null) parentGroup!!.channels else localChannels
 
     internal fun addCommand(command: ICommand) {
         commands.add(command)
-        channels[command.hashCode().toString()] = Channel(0)
         command.parentGroup = this
     }
 
@@ -45,13 +47,14 @@ public abstract class CommandGroup(
         }
         channels.filter { (key, _) -> key != id }.forEach { it.value.receiveCatching() }
         channels[id]?.close()
-        channels[id] = Channel(channels.size - 1)
+        channels[id] = Channel(Channel.UNLIMITED)
         println("Job ${child.name} ($id) resumed after sync")
     }
 
     protected fun setupSync() {
-        channels.forEach { (key, value) ->
-            channels[key] = Channel(channels.size - 1)
+        commands.forEach {
+            if (it is CommandGroup) return@forEach
+            channels[it.hashCode().toString()] = Channel(Channel.UNLIMITED)
         }
     }
 
