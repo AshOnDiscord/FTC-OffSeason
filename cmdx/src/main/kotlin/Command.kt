@@ -7,6 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 public interface ICommand {
+    public val name: String
     public var parentGroup: CommandGroup?
 
     public suspend fun run(scope: CoroutineScope)
@@ -15,7 +16,7 @@ public interface ICommand {
 }
 
 public open class Command(
-    public val name: String = "Unnamed Command",
+    public override val name: String = "Unnamed Command",
     public val onCancel: () -> Unit = {},
     public val runnable: suspend Command.() -> Unit,
 ) : ICommand {
@@ -23,7 +24,7 @@ public open class Command(
     public lateinit var job: Job
 
     public suspend fun synch() {
-        parentGroup?.groupSync()
+        parentGroup?.synchChild(this)
     }
 
     public override suspend fun run(scope: CoroutineScope) {
