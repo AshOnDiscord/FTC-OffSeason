@@ -125,7 +125,7 @@ class SyncTest {
         var sync =
             Parallel("Parallel") {
                 +Sequential("Sequential") {
-                    Command("14 | Sequential Child") {
+                    Command {
                         result += "1"
                         delay(25)
                         sync()
@@ -187,5 +187,21 @@ class SyncTest {
         }
 
         assertEquals("123456789abc", result)
+    }
+
+    fun `Standalone Command does not break`() {
+        var result = ""
+        var sync =
+            Command("standalone") {
+                delay(25)
+                result += "a"
+                sync()
+                delay(25)
+                result += "b"
+            }
+        runTest {
+            sync.run(this)
+        }
+        assertEquals("ab", result)
     }
 }
