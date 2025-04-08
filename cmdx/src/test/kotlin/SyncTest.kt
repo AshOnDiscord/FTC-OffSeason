@@ -1,4 +1,3 @@
-import com.millburnx.cmdx.Command
 import com.millburnx.cmdx.commandGroups.Parallel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -14,7 +13,7 @@ class SyncTest {
                 Command("ad") {
                     delay(25)
                     result += "a"
-                    synch()
+                    sync()
                     delay(25)
                     result += "d"
                 }
@@ -22,7 +21,7 @@ class SyncTest {
                 Command("bf") {
                     delay(50)
                     result += "b"
-                    synch()
+                    sync()
                     delay(75)
                     result += "f"
                 }
@@ -30,7 +29,7 @@ class SyncTest {
                 Command("ce") {
                     delay(75)
                     result += "c"
-                    synch()
+                    sync()
                     delay(50)
                     result += "e"
                 }
@@ -52,14 +51,14 @@ class SyncTest {
                     Command("af") {
                         delay(25)
                         result += "a"
-                        synch()
+                        sync()
                         delay(75)
                         result += "f"
                     }
                     Command("bd") {
                         delay(50)
                         result += "b"
-                        synch()
+                        sync()
                         delay(25)
                         result += "d"
                     }
@@ -67,7 +66,7 @@ class SyncTest {
                 Command("ce") {
                     delay(75)
                     result += "c"
-                    synch()
+                    sync()
                     delay(50)
                     result += "e"
                 }
@@ -81,28 +80,28 @@ class SyncTest {
     }
 
     @Test
-    fun `Synchs commands of varying lengths`() {
+    fun `Syncs commands of varying lengths`() {
         var result = ""
         var sync =
             Parallel {
-                Command("") {
+                Command("adf") {
                     delay(25)
                     result += "a"
-                    synch()
+                    sync()
                     delay(25)
                     result += "d"
-                    synch()
+                    sync()
                     delay(75)
                     result += "f"
                 }
-                Command("") {
+                Command("ce") {
                     delay(75)
                     result += "c"
-                    synch()
+                    sync()
                     delay(50)
                     result += "e"
                 }
-                Command("") {
+                Command("b") {
                     delay(50)
                     result += "b"
                 }

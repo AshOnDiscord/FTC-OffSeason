@@ -13,13 +13,11 @@ public class Parallel(
     }
 
     public override suspend fun run(scope: CoroutineScope) {
-        this.setupSync()
         currentScope = scope
         val jobs: List<Job> =
             commands.map {
                 scope.launch {
                     it.run(this)
-                    this@Parallel.cleanUp(it)
                 }
             }
 

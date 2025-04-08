@@ -2,7 +2,6 @@ package com.millburnx.cmdx.commandGroups
 
 import com.millburnx.cmdx.Command
 import com.millburnx.cmdx.ICommand
-import jdk.internal.org.jline.keymap.KeyMap.key
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -39,7 +38,7 @@ public abstract class CommandGroup(
         addCommand(object : Command(name, onCancel, block) {})
     }
 
-    internal suspend fun synchChild(child: ICommand) {
+    internal suspend fun syncChild(child: ICommand) {
         val id = child.hashCode().toString()
         println("Job ${child.name} ($id) reached sync point")
         repeat(channels.size - 1) {
@@ -51,14 +50,7 @@ public abstract class CommandGroup(
         println("Job ${child.name} ($id) resumed after sync")
     }
 
-    protected fun setupSync() {
-        commands.forEach {
-            if (it is CommandGroup) return@forEach
-            channels[it.hashCode().toString()] = Channel(Channel.UNLIMITED)
-        }
-    }
-
-    protected fun cleanUp(command: ICommand) {
+    public fun cleanUp(command: ICommand) {
         val id = command.hashCode().toString()
         channels[id]?.close()
         channels.remove(id)
