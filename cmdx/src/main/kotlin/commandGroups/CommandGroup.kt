@@ -14,6 +14,7 @@ public abstract class CommandGroup(
     protected val commands: MutableList<ICommand> = mutableListOf()
 
     public var currentScope: CoroutineScope? = null
+
     override var parentGroup: CommandGroup? = null
 
     private val channelsRaw: MutableMap<String, Channel<Unit>> = hashMapOf<String, Channel<Unit>>()
