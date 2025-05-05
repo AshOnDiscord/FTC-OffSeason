@@ -1,36 +1,38 @@
 package com.millburnx.cmdx
 
+import com.millburnx.cmdx.commandGroups.CommandGroup
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
 public interface ICommand {
+    public val name: String
+    public var parentGroup: CommandGroup?
+
     public suspend fun run(scope: CoroutineScope)
 
     public fun cancel()
 }
 
-public abstract class Command(
-    public val name: String,
+public open class Command(
+    public override val name: String = "Unnamed Command",
     public val onCancel: () -> Unit = {},
-    public val runnable: suspend () -> Unit,
+    public val runnable: suspend Command.() -> Unit,
 ) : ICommand {
-    private val synchChanel = Channel<Unit>()
+    override var parentGroup: CommandGroup? = null
     public lateinit var job: Job
 
-    @OptIn(DelicateCoroutinesApi::class)
-    public suspend fun synch(): Boolean {
-        synchChanel.send(Unit)
-        return !synchChanel.isClosedForReceive
+    public suspend fun sync() {
+        parentGroup?.syncChild(this)
     }
 
     public override suspend fun run(scope: CoroutineScope) {
         job =
             scope.launch {
                 try {
+                    parentGroup?.channels[this@Command.hashCode().toString()] = Channel(Channel.UNLIMITED)
                     println("Command: $name started.")
                     runnable()
                 } catch (e: CancellationException) {
@@ -38,7 +40,7 @@ public abstract class Command(
                     onCancel()
                 } finally {
                     println("Command $name completed.")
-                    synchChanel.close()
+                    parentGroup?.cleanUp(this@Command)
                 }
             }
 
@@ -49,5 +51,13 @@ public abstract class Command(
         if (::job.isInitialized) {
             job.cancel()
         }
+    }
+}
+
+public typealias CommandS = Command
+
+public class EmptyCommand : Command("Empty Command", {}, {}) {
+    override suspend fun run(scope: CoroutineScope) {
+        return
     }
 }

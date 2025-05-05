@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-public class Parallel(
+public open class Parallel(
     name: String = "Unnamed Parallel",
     public val block: Parallel.() -> Unit,
 ) : CommandGroup(name) {
@@ -16,7 +16,9 @@ public class Parallel(
         currentScope = scope
         val jobs: List<Job> =
             commands.map {
-                scope.launch { it.run(this) }
+                scope.launch {
+                    it.run(this)
+                }
             }
 
         jobs.forEach { it.join() }
