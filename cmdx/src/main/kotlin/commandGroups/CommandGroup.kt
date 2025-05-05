@@ -22,7 +22,7 @@ public abstract class CommandGroup(
     public val channels: MutableMap<String, Channel<Unit>>
         get() = if (parentGroup != null) parentGroup!!.channels else localChannels
 
-    internal fun addCommand(command: ICommand) {
+    internal open fun addCommand(command: ICommand) {
         commands.add(command)
         command.parentGroup = this
     }
