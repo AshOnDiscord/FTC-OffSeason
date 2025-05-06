@@ -2,14 +2,16 @@ import org.gradle.kotlin.dsl.testImplementation
 
 plugins {
     kotlin("jvm")
+    `maven-publish`
     id("org.jetbrains.dokka") version "2.0.0"
     id("io.gitlab.arturbosch.detekt") version ("1.23.8")
 }
 
 group = "com.millburnx"
-version = "0.10"
+version = "0.1.0"
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -30,4 +32,28 @@ kotlin {
 detekt {
     config.from(files("$rootDir/cmdx/detekt.yml"))
     source.from(files("src/main/kotlin"))
+}
+
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifact(sourcesJar.get())
+
+            groupId = "com.millburnx"
+            artifactId = "cmdx"
+            version = "0.1.0"
+
+            pom {
+                name = "CmdX"
+                description = "A FTC Orientated Kotlin library for creating complex performant command-based systems"
+                url = "https://github.com/AshOnDiscord/FTC-OffSeason"
+            }
+        }
+    }
 }
