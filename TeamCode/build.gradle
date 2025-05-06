@@ -22,6 +22,10 @@ android {
     packagingOptions {
         jniLibs.useLegacyPackaging true
     }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
 }
 
 dependencies {
