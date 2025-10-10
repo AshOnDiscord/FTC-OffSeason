@@ -2,7 +2,6 @@ package com.millburnx.cmdx.commandGroups
 
 import com.millburnx.cmdx.Command
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 public class ParallelDeadline(
@@ -20,7 +19,7 @@ public class ParallelDeadline(
 
     public override suspend fun run(scope: CoroutineScope) {
         val jobs =
-            commands.map {
+            _commands.map {
                 scope.launch {
                     it.run(this)
                 }

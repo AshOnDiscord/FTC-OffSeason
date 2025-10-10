@@ -44,8 +44,8 @@ public class Conditional(
     override suspend fun run(scope: CoroutineScope) {
         // runtime evulation of the condition
         val command = if (condition()) ifTrue else ifFalse
-        commands.clear()
-        commands.add(command)
+        _commands.clear()
+        _commands.add(command)
         command.run(scope)
     }
 }

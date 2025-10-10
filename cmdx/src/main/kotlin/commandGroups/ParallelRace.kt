@@ -14,7 +14,7 @@ public class ParallelRace(
 
     public override suspend fun run(scope: CoroutineScope) {
         val finished = CompletableDeferred<Unit>()
-        commands.forEach {
+        _commands.forEach {
             scope.launch {
                 it.run(scope)
                 finished.complete(Unit)

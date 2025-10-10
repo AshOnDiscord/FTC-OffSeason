@@ -9,12 +9,18 @@ import kotlinx.coroutines.launch
 
 public interface ICommand {
     public val name: String
+    public val id: CommandID
+        get() = this.hashCode().toString()
     public var parentGroup: CommandGroup?
 
     public suspend fun run(scope: CoroutineScope)
 
     public fun cancel()
 }
+
+public interface NonSyncableCommand : ICommand {}
+
+public typealias CommandID = String;
 
 public open class Command(
     public override val name: String = "Unnamed Command",
@@ -32,7 +38,9 @@ public open class Command(
         job =
             scope.launch {
                 try {
-                    parentGroup?.channels[this@Command.hashCode().toString()] = Channel(Channel.UNLIMITED)
+//                    parentGroup?.channels[this@Command.id] = Channel(Channel.UNLIMITED)
+//                    if (command !is NonSyncableCommand) commandList.add(command.id) // make sure its syncable, aka not a group
+                    parentGroup?.commandList?.add(id)
                     println("Command: $name started.")
                     runnable()
                 } catch (e: CancellationException) {

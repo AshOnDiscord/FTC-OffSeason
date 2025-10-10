@@ -2,6 +2,7 @@ package com.millburnx.cmdx.commandGroups
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 public open class Parallel(
@@ -15,12 +16,12 @@ public open class Parallel(
     public override suspend fun run(scope: CoroutineScope) {
         currentScope = scope
         val jobs: List<Job> =
-            commands.map {
+            _commands.map {
                 scope.launch {
                     it.run(this)
                 }
             }
 
-        jobs.forEach { it.join() }
+        jobs.joinAll()
     }
 }

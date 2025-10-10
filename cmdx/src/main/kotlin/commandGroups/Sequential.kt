@@ -14,7 +14,7 @@ public class Sequential(
     public override suspend fun run(scope: CoroutineScope) {
         currentScope = scope
         println("Running Sequential Command Group: $name")
-        for (command in commands) {
+        for (command in _commands) {
             if (!scope.isActive) {
                 cancel()
                 break
