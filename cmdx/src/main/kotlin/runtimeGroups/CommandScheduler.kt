@@ -14,7 +14,7 @@ public class CommandScheduler(
     private val scope = CoroutineScope(dispatcher)
     public val runner: Parallel = Parallel(name) {}
 
-    public suspend fun schedule(command: ICommand) {
+    public fun schedule(command: ICommand) {
         runner.addCommand(command)
         scope.launch {
             // immediately run command on added

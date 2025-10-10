@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation "com.millburnx:cmdx:0.1.0"
+//    implementation "com.millburnx:cmdx:0.1.0"
+    implementation('com.github.AshOnDiscord:FTC-OffSeason:9322d93fb7')
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
 }

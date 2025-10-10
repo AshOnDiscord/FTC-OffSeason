@@ -1,5 +1,4 @@
 import org.gradle.kotlin.dsl.testImplementation
-
 plugins {
     kotlin("jvm")
     `maven-publish`
@@ -8,13 +7,11 @@ plugins {
 }
 
 group = "com.millburnx"
-version = "0.1.0"
-
+version = "0.1.1"
 repositories {
     mavenLocal()
     mavenCentral()
 }
-
 dependencies {
     testImplementation(kotlin("test"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
@@ -47,7 +44,7 @@ publishing {
 
             groupId = "com.millburnx"
             artifactId = "cmdx"
-            version = "0.1.0"
+            version = "0.1.1"
 
             pom {
                 name = "CmdX"
