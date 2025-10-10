@@ -43,7 +43,7 @@ public abstract class CommandGroup(
                         field!!.commandList -= this@CommandGroup.commandList.toSet()
                     }
                 }
-                locks.forEach { it.unlock() }
+                locks.reversed().forEach { it.unlock() }
             }
 
             field = value
