@@ -16,7 +16,7 @@ import kotlin.collections.forEach
 public abstract class CommandGroup(
     public override val name: String,
 ) : ICommand, NonSyncableCommand {
-    protected val _commands: MutableList<ICommand> = mutableListOf()
+    protected val _commands: MutableList<ICommand> = Collections.synchronizedList(mutableListOf())
     public val commands: List<ICommand> get() = _commands.toList()
 
     public var currentScope: CoroutineScope? = null
@@ -30,40 +30,49 @@ public abstract class CommandGroup(
                 .distinct()
                 .sortedBy { System.identityHashCode(it) } // prevent deadlocks
 
+//            runBlocking {
+//                locks.forEach { it.lock() }
+            // when we are moved into a different group, we need to update all the channel/lists
+            if (value != null) {
+                value.channels += this@CommandGroup.localChannels
+                value.commandList += this@CommandGroup.commandList
 
-            runBlocking {
-                locks.forEach { it.lock() }
-                // when we are moved into a different group, we need to update all the channel/lists
-                if (value != null) {
-                    value.channels += this@CommandGroup.localChannels
-                    value.commandList += this@CommandGroup.commandList
-
-                    if (field != null) {
-                        this@CommandGroup.channels.forEach { field!!.channels.remove(it.key) }
-                        field!!.commandList -= this@CommandGroup.commandList.toSet()
-                    }
+                if (field != null) {
+//                        this@CommandGroup.channels.forEach { field!!.channels.remove(it.key) }
+                    this@CommandGroup.channels.toMap().forEach { field!!.channels.remove(it.key) }
+                    field!!.commandList -= this@CommandGroup.commandList.toSet()
                 }
-                locks.reversed().forEach { it.unlock() }
             }
+//                locks.reversed().forEach { it.unlock() }
+//            }
 
             field = value
         }
 
-    private val localCommandList: MutableList<CommandID> = mutableListOf()
+    private val localCommandList: MutableList<CommandID> = Collections.synchronizedList(mutableListOf())
     private val localChannels: MutableMap<CommandID, Channel<Unit>> = hashMapOf()
     public val channels: MutableMap<CommandID, Channel<Unit>> get() = parentGroup?.channels ?: localChannels
     public val commandList: MutableList<CommandID> get() = parentGroup?.commandList ?: localCommandList
 
     private val _mutex = Mutex()
-    private val mutex: Mutex
+    public val mutex: Mutex
         get() = parentGroup?.mutex ?: _mutex
 
-    internal open fun addCommand(command: ICommand) {
-        runBlocking {
-            mutex.withLock {
-                _commands.add(command)
-            }
+    private var _onSync: () -> Unit = {}
+    public var onSync: () -> Unit
+        get() = parentGroup?.onSync ?: _onSync
+        set(value: () -> Unit) {
+            if (parentGroup != null) parentGroup?.onSync = value
+            _onSync = value
         }
+
+
+    internal open fun addCommand(command: ICommand) {
+//        runBlocking {
+//            mutex.withLock {
+        _commands.add(command)
+//            }
+//        }
         command.parentGroup = this
     }
 
@@ -93,7 +102,11 @@ public abstract class CommandGroup(
                 // alert others
                 println("All others are ready, ${child.id} is notifying others")
 
-                channels.entries.toList().forEach {
+                // trigger onsync callback first
+                onSync()
+
+//                channels.entries.toList().forEach {
+                channels.toMap().forEach {
                     if (it.key == child.id) return@forEach
                     channels.remove(it.key)
                     it.value.trySend(Unit)
@@ -125,7 +138,8 @@ public abstract class CommandGroup(
             if (isReady(command.id)) {
                 println("Job ${command.id} is holding others up, notifying others")
                 // notify others
-                channels.entries.toList().forEach {
+//                channels.entries.toList().forEach {
+                channels.toMap().forEach {
                     if (it.key == command.id) return@forEach
                     channels.remove(it.key)
                     it.value.trySend(Unit)

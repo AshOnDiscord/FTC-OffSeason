@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.withLock
 
 public interface ICommand {
     public val name: String
@@ -28,19 +30,19 @@ public open class Command(
     public val runnable: suspend Command.() -> Unit,
 ) : ICommand {
     override var parentGroup: CommandGroup? = null
-    public lateinit var job: Job
+    public var job: Job? = null
 
     public suspend fun sync() {
         parentGroup?.syncChild(this)
     }
 
     public override suspend fun run(scope: CoroutineScope) {
-        job =
+        val job =
             scope.launch {
                 try {
-//                    parentGroup?.channels[this@Command.id] = Channel(Channel.UNLIMITED)
-//                    if (command !is NonSyncableCommand) commandList.add(command.id) // make sure its syncable, aka not a group
-                    parentGroup?.commandList?.add(id)
+                    parentGroup?.mutex?.withLock {
+                        parentGroup?.commandList?.add(id)
+                    }
                     println("Command: $name started.")
                     runnable()
                 } catch (e: CancellationException) {
@@ -51,14 +53,12 @@ public open class Command(
                     parentGroup?.cleanUp(this@Command)
                 }
             }
-
+        this.job = job
         job.join()
     }
 
     public override fun cancel() {
-        if (::job.isInitialized) {
-            job.cancel()
-        }
+        job?.cancel()
     }
 }
 

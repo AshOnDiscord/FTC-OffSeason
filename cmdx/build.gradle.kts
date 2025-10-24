@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.millburnx"
-version = "0.1.1"
+version = "0.1.2"
 repositories {
     mavenLocal()
     mavenCentral()
@@ -44,7 +44,7 @@ publishing {
 
             groupId = "com.millburnx"
             artifactId = "cmdx"
-            version = "0.1.1"
+            version = "0.1.2"
 
             pom {
                 name = "CmdX"
