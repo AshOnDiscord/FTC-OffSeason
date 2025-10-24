@@ -135,10 +135,11 @@ public abstract class CommandGroup(
             commandList.remove(command.id)
             channels.remove(command.id)
 
-            if (isReady(command.id)) {
+            if (isReady(command.id) && commandList.isNotEmpty()) {
                 println("Job ${command.id} is holding others up, notifying others")
                 // notify others
 //                channels.entries.toList().forEach {
+                onSync()
                 channels.toMap().forEach {
                     if (it.key == command.id) return@forEach
                     channels.remove(it.key)

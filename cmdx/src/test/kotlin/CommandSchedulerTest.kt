@@ -98,4 +98,85 @@ class CommandSchedulerTest {
             delay(100)
             assertEquals("123456", result)
         }
+
+    @Test
+    fun `CommandScheduler continues running despite subcommand cancels`() = runTest {
+        var result = ""
+        var scheduler = CommandScheduler(dispatcher = StandardTestDispatcher(testScheduler))
+
+        val command1 = Command("a d") {
+            delay(10)
+            sync()
+            delay(10)
+            result += "a"
+            sync()
+            delay(50)
+            result += "d"
+            delay(50)
+            // cancel command
+            sync()
+            result += "ERROR"
+        }
+
+        val command2 = Command("b c e") {
+            delay(10)
+            sync()
+            delay(50)
+            result += "b"
+            sync()
+            delay(20)
+            result += "c"
+            sync()
+            result += "e"
+        }
+
+        scheduler.schedule(command1)
+        scheduler.schedule(command2)
+
+        delay(10 + 50 + 70)
+        command1.cancel()
+        delay(100)
+        assertEquals("abcde", result)
+    }
+
+    @Test
+    fun `CommandScheduler continues running despite subcommand cancels - v2`() = runTest {
+        var result = ""
+        var scheduler = CommandScheduler(dispatcher = StandardTestDispatcher(testScheduler))
+
+        val command1 = Command("a c") {
+            delay(10)
+            sync()
+            delay(10)
+            result += "a"
+            sync()
+            println(result)
+            delay(20)
+            result += "c"
+            delay(50)
+            // cancel command
+            sync()
+            result += "ERROR"
+        }
+
+        val command2 = Command("b d e") {
+            delay(10)
+            sync()
+            delay(50)
+            result += "b"
+            sync()
+            delay(50)
+            result += "d"
+            sync()
+            result += "e"
+        }
+
+        scheduler.schedule(command1)
+        scheduler.schedule(command2)
+
+        delay(10 + 50 + 30)
+        command1.cancel()
+        delay(100)
+        assertEquals("abcde", result)
+    }
 }
