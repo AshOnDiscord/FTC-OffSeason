@@ -2,5 +2,6 @@ jdk:
   - openjdk21
 
 install:
-  - ./gradlew clean :cmdx:publishToMavenLocal
-  - ./gradlew clean :cmdxpedro:publishToMavenLocal
+  - ./gradlew clean
+  - ./gradlew :cmdx:publishToMavenLocal
+  - ./gradlew :cmdxpedro:publishToMavenLocal
