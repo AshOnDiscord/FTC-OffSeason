@@ -144,7 +144,9 @@ class CommandSchedulerTest {
         var result = ""
         var scheduler = CommandScheduler(dispatcher = StandardTestDispatcher(testScheduler))
 
-        val command1 = Command("a c") {
+        val command1 = Command("a c", {
+            println("canceling | $result")
+        }) {
             delay(10)
             sync()
             delay(10)
@@ -178,5 +180,27 @@ class CommandSchedulerTest {
         command1.cancel()
         delay(100)
         assertEquals("abcde", result)
+    }
+
+    @Test
+    fun `CommandScheduler calls oncancel`() = runTest {
+        var result = ""
+        var scheduler = CommandScheduler(dispatcher = StandardTestDispatcher(testScheduler))
+        val command1 = Command("a c", {
+            println("canceling")
+            result += "b"
+        }) {
+            delay(10)
+            result += "a"
+            sync()
+            delay(50)
+            result += "ERROR"
+        }
+
+        scheduler.schedule(command1)
+        delay(20)
+        command1.cancel()
+        delay(50)
+        assertEquals("ab", result)
     }
 }

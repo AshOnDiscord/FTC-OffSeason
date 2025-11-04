@@ -37,8 +37,12 @@ jobs:
         build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
         build-scan-terms-of-use-agree: "yes"
 
-    - name: Maven Local Publish with Gradle Wrapper
+    - name: Maven Local Publish with Gradle Wrapper - CmdX
       run: ./gradlew cmdx:publishToMavenLocal
+
+
+    - name: Maven Local Publish with Gradle Wrapper - CmdXPedro
+      run: ./gradlew cmdxpedro:publishToMavenLocal
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build

@@ -5,3 +5,5 @@ include ':FtcRobotController'
 include ':TeamCode'
 include 'cmdx'
 
+
+include 'cmdxpedro'

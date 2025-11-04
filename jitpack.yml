@@ -3,3 +3,4 @@ jdk:
 
 install:
   - ./gradlew clean :cmdx:publishToMavenLocal
+  - ./gradlew clean :cmdxpedro:publishToMavenLocal
