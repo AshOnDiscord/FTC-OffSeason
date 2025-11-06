@@ -13,9 +13,13 @@ public suspend fun Command.WaitFor(case: () -> Boolean) {
     }
 }
 
-public suspend fun Command.SleepFor(ms: Long) {
+public suspend fun Command.SleepFor(ms: Long, earlyExit: () -> Boolean = { false }) {
+    SleepFor(earlyExit) { ms }
+}
+
+public suspend fun Command.SleepFor(earlyExit: () -> Boolean = { false }, ms: () -> Long) {
     val elapsedTime = ElapsedTime()
-    WaitFor { elapsedTime.milliseconds() >= ms }
+    WaitFor { elapsedTime.milliseconds() >= ms() || earlyExit() }
 }
 
 public fun Double.toRadians(): Double = Math.toRadians(this)
