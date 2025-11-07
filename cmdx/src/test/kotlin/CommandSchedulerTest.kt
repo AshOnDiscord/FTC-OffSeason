@@ -183,6 +183,51 @@ class CommandSchedulerTest {
     }
 
     @Test
+    fun `CommandScheduler continues running despite subcommand group cancels`() = runTest {
+        var result = ""
+        val scheduler = CommandScheduler(dispatcher = StandardTestDispatcher(testScheduler))
+        val g1 = Parallel {
+            Command {
+                delay(20)
+                result += "a"
+                sync()
+                delay(50)
+                result += "c"
+            }
+            Command {
+                delay(30)
+                result += "b"
+            }
+        }
+        val g2 = Sequential {
+            Command { delay(1); sync() }
+            Command {
+                delay(20)
+                result += "c"
+            }
+        }
+
+        val c3 = Command {
+            delay(1)
+            sync()
+            delay(1)
+            sync()
+            delay(100)
+            result += "d"
+        }
+
+        scheduler.schedule(g1)
+        scheduler.schedule(g2)
+        scheduler.schedule(c3)
+
+        delay(40)
+        g1.cancel()
+        delay(200)
+
+        assertEquals("abcd", result)
+    }
+
+    @Test
     fun `CommandScheduler calls oncancel`() = runTest {
         var result = ""
         var scheduler = CommandScheduler(dispatcher = StandardTestDispatcher(testScheduler))
