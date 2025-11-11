@@ -10,11 +10,6 @@ public data class Pose2d(
     val position: Vec2d = Vec2d(),
     val heading: Double = 0.0,
 ) {
-    public constructor(position: Vec2<*, *> = Vec2d(), heading: Double = 0.0) : this(
-        Vec2d(position.x, position.y),
-        heading
-    )
-
     public constructor(x: Double, y: Double, heading: Double) : this(Vec2d(x, y), heading)
     public constructor(x: Double, y: Double) : this(Vec2d(x, y), 0.0)
     public constructor(values: Array<Double>) : this(values[0], values[1], values[2])
@@ -34,7 +29,7 @@ public data class Pose2d(
         public fun fromRadians(
             position: Vec2<*, *>,
             radians: Double,
-        ): Pose2d = Pose2d(position, radians.toDegrees())
+        ): Pose2d = Pose2d(Vec2d(position.x.toDouble(), position.y.toDouble()), radians.toDegrees())
 
         public fun fromRadians(
             x: Double,
