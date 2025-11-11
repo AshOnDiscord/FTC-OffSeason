@@ -13,7 +13,7 @@ import kotlin.math.sqrt
 // All the operations are like floats or just like bad
 // it's really only good for holding values, not actually for operations
 public data class Vec2i(override val x: Int, override val y: Int) : Vec2<Int, Vec2i> {
-    public constructor(x: Number = 0, y: Number = x) : this(x.toInt(), y.toInt())
+    public constructor(x: Number = 0, y: Number = 0) : this(x.toInt(), y.toInt())
     public constructor(vec: Vec2<*, *>) : this(vec.x, vec.y)
     public constructor(pair: Pair<Number, Number>) : this(pair.first.toInt(), pair.second.toInt())
     public constructor(list: List<Number>) : this(list[0].toInt(), list[1].toInt())
@@ -42,13 +42,13 @@ public data class Vec2i(override val x: Int, override val y: Int) : Vec2<Int, Ve
     override fun sum(): Int = x + y
     override fun magnitude(): Float = sqrt(this.dot(this).toFloat()).toFloat()
     override fun normalize(): Vec2i = this / this.magnitude()
+    override fun angle(): Double = atan2(y.toDouble(), x.toDouble())
     override fun distance(other: Vec2<*, *>): Float = sqrt((-this + other).pow(2.0).sum().toFloat())
     override fun dot(other: Vec2<*, *>): Int = (x * other.x.toFloat() + y * other.y.toFloat()).toInt()
     public fun dotRound(other: Vec2<*, *>): Int = (x * other.x.toFloat() + y * other.y.toFloat()).roundToInt()
     override fun cross(other: Vec2<*, *>): Int = (x * other.y.toFloat() - y * other.x.toFloat()).toInt()
     public fun crossRound(other: Vec2<*, *>): Int = (x * other.y.toFloat() - y * other.x.toFloat()).roundToInt()
-    override fun angle(other: Vec2<*, *>): Float =
-        (atan2(other.y.toFloat(), other.x.toFloat()) - atan2(y.toFloat(), x.toFloat()))
+    override fun angleTo(other: Vec2<*, *>): Float = atan2(other.y.toFloat() - y.toFloat(), other.x.toFloat() - x.toFloat())
 
     override fun project(other: Vec2<*, *>): Vec2i = this * other / other.magnitude()
     override fun lerp(other: Vec2<*, *>, t: Number): Vec2i = this + (-this + other) * t.toDouble()
@@ -57,11 +57,11 @@ public data class Vec2i(override val x: Int, override val y: Int) : Vec2<Int, Ve
 
     override fun perpendicular(): Vec2i = Vec2i(-y, x)
     override fun sign(): Vec2i = Vec2i(sign(x.toDouble()).toInt(), sign(y.toDouble()).toInt())
-    override fun toDouble(): Vec2<Double, *> = Vec2d(x, y)
-    override fun toFloat(): Vec2<Float, *> = Vec2f(x, y)
-    override fun toInt(): Vec2<Int, *> = Vec2i(x, y)
+    override fun toDouble(): Vec2d = Vec2d(x, y)
+    override fun toFloat(): Vec2f = Vec2f(x, y)
+    override fun toInt(): Vec2i = Vec2i(x, y)
 
-    override fun roundToInt(): Vec2<Int, *> = Vec2i(x.toDouble().roundToInt(), y.toDouble().roundToInt())
+    override fun roundToInt(): Vec2i = Vec2i(x.toDouble().roundToInt(), y.toDouble().roundToInt())
 
     override fun toPair(): Pair<Int, Int> = x to y
     override fun toList(): List<Int> = listOf(x, y)

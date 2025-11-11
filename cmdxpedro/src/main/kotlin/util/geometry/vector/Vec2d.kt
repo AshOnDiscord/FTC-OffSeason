@@ -10,7 +10,7 @@ import kotlin.math.sqrt
 
 @Suppress("detekt:TooManyFunctions")
 public data class Vec2d(override val x: Double, override val y: Double) : Vec2<Double, Vec2d> {
-    public constructor(x: Number = 0, y: Number = x) : this(x.toDouble(), y.toDouble())
+    public constructor(x: Number = 0, y: Number = 0) : this(x.toDouble(), y.toDouble())
     public constructor(vec: Vec2<*, *>) : this(vec.x, vec.y)
     public constructor(pair: Pair<Number, Number>) : this(pair.first.toDouble(), pair.second.toDouble())
     public constructor(list: List<Number>) : this(list[0].toDouble(), list[1].toDouble())
@@ -61,10 +61,11 @@ public data class Vec2d(override val x: Double, override val y: Double) : Vec2<D
     override fun sum(): Double = x + y
     override fun magnitude(): Double = sqrt(this.dot(this))
     override fun normalize(): Vec2d = this / this.magnitude()
+    override fun angle(): Double = atan2(y, x)
     override fun distance(other: Vec2<*, *>): Double = sqrt((-this + other).pow(2.0).sum())
     override fun dot(other: Vec2<*, *>): Double = x * other.x.toDouble() + y * other.y.toDouble()
     override fun cross(other: Vec2<*, *>): Double = x * other.y.toDouble() - y * other.x.toDouble()
-    override fun angle(other: Vec2<*, *>): Double = atan2(other.y.toDouble(), other.x.toDouble()) - atan2(y, x)
+    override fun angleTo(other: Vec2<*, *>): Double = atan2(other.y.toDouble() - y, other.x.toDouble() - x)
     override fun project(other: Vec2<*, *>): Vec2d =
         this * other / other.magnitude()
 
@@ -80,14 +81,14 @@ public data class Vec2d(override val x: Double, override val y: Double) : Vec2<D
     override fun perpendicular(): Vec2d = Vec2d(-y, x)
     override fun sign(): Vec2d = Vec2d(sign(x), sign(y))
 
-    override fun toDouble(): Vec2<Double, *> = Vec2d(x, y)
-    override fun toFloat(): Vec2<Float, *> = Vec2f(x, y)
+    override fun toDouble(): Vec2d = Vec2d(x, y)
+    override fun toFloat(): Vec2f = Vec2f(x, y)
 
-    override fun toInt(): Vec2<Int, *> {
+    override fun toInt(): Vec2i {
         TODO("Not yet implemented")
     }
 
-    override fun roundToInt(): Vec2<Int, *> {
+    override fun roundToInt(): Vec2i {
         TODO("Not yet implemented")
     }
 

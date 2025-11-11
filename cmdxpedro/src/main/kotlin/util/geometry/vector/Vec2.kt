@@ -26,12 +26,13 @@ public interface Vec2<T : Number, Self : Vec2<T, Self>> : Serializable {
     public fun sum(): T
     public fun magnitude(): Number
     public fun normalize(): Self
+    public fun angle(): Number
 
     // custom functions
     public fun distance(other: Vec2<*, *>): Number
     public fun dot(other: Vec2<*, *>): T
     public fun cross(other: Vec2<*, *>): T
-    public fun angle(other: Vec2<*, *>): Number
+    public fun angleTo(other: Vec2<*, *>): Number
     public fun project(other: Vec2<*, *>): Self
 
     public fun lerp(other: Vec2<*, *>, t: Number): Self

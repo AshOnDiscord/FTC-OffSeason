@@ -1,5 +1,6 @@
 package com.millburnx.cmdxpedro.util
 
+import com.millburnx.cmdxpedro.util.geometry.vector.Vec2
 import com.millburnx.cmdxpedro.util.geometry.vector.Vec2d
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeDegrees
 import kotlin.math.absoluteValue
@@ -9,6 +10,11 @@ public data class Pose2d(
     val position: Vec2d = Vec2d(),
     val heading: Double = 0.0,
 ) {
+    public constructor(position: Vec2<*, *> = Vec2d(), heading: Double = 0.0) : this(
+        Vec2d(position.x, position.y),
+        heading
+    )
+
     public constructor(x: Double, y: Double, heading: Double) : this(Vec2d(x, y), heading)
     public constructor(x: Double, y: Double) : this(Vec2d(x, y), 0.0)
     public constructor(values: Array<Double>) : this(values[0], values[1], values[2])
@@ -26,7 +32,7 @@ public data class Pose2d(
 
     public companion object {
         public fun fromRadians(
-            position: Vec2d,
+            position: Vec2<*, *>,
             radians: Double,
         ): Pose2d = Pose2d(position, radians.toDegrees())
 
@@ -46,24 +52,27 @@ public data class Pose2d(
     public operator fun plus(other: Pose2d): Pose2d =
         Pose2d(position + other.position, normalizeDegrees(heading + other.heading))
 
-    public operator fun plus(other: Vec2d): Pose2d = Pose2d(position + other, heading)
+    public operator fun plus(other: Vec2<*, *>): Pose2d = Pose2d(position + other, heading)
 
     public operator fun minus(other: Pose2d): Pose2d =
         Pose2d(position - other.position, normalizeDegrees(heading - other.heading))
 
-    public operator fun minus(other: Vec2d): Pose2d = Pose2d(position - other, heading)
+    public operator fun minus(other: Vec2<*, *>): Pose2d = Pose2d(position - other, heading)
 
-    public operator fun times(other: Vec2d): Pose2d = Pose2d(position * other, heading)
+    public operator fun times(other: Vec2<*, *>): Pose2d = Pose2d(position * other, heading)
 
     public operator fun times(scalar: Double): Pose2d = Pose2d(position * scalar, heading)
 
-    public operator fun div(other: Vec2d): Pose2d = Pose2d(position / other, heading)
+    public operator fun div(other: Vec2<*, *>): Pose2d = Pose2d(position / other, heading)
 
     public operator fun div(scalar: Double): Pose2d = Pose2d(position / scalar, heading)
 
     public fun distanceTo(pose: Pose2d): Double = position.distance(pose.position)
 
-    public fun distanceTo(vec2d: Vec2d): Double = position.distance(vec2d)
+    public fun distanceTo(vec2d: Vec2<*, *>): Double = position.distance(vec2d)
+
+    public fun angleTo(pose: Pose2d): Double = position.angleTo(pose.position)
+    public fun angleTo(vec2d: Vec2<*, *>): Double = position.angleTo(vec2d)
 
     public fun sign(): Pose2d = Pose2d(position.sign(), heading.sign)
 }
