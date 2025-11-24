@@ -6,6 +6,9 @@ import com.millburnx.cmdxpedro.util.geometry.vector.Vec2f
 import com.millburnx.cmdxpedro.util.geometry.vector.Vec2i
 import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.util.ElapsedTime
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 public suspend fun Command.WaitFor(case: () -> Boolean) {
     while (!case()) {
@@ -29,3 +32,43 @@ public fun Double.toDegrees(): Double = Math.toDegrees(this)
 public fun Vec2d.toPedro(): Pose = Pose(x, y)
 public fun Vec2f.toPedro(): Pose = Pose(x.toDouble(), y.toDouble())
 public fun Vec2i.toPedro(): Pose = Pose(x.toDouble(), y.toDouble())
+
+public fun Pose2d.mirror(mirror: Boolean = true): Pose2d {
+    if (!mirror) return this
+    return Pose2d(144.0 - this.x, this.y, normalizeDegrees(180.0 - this.degrees))
+}
+
+public fun Vec2d.mirror(mirror: Boolean = true): Vec2d {
+    if (!mirror) return this
+    return Vec2d(144.0 - this.x, this.y)
+}
+
+public fun normalizeRadians(radians: Double): Double {
+    return atan2(sin(radians), cos(radians))
+}
+
+public fun normalizeDegrees(degrees: Double): Double {
+    return normalizeRadians(degrees.toRadians()).toDegrees()
+}
+
+public fun Double.normalizeRadians(): Double {
+    return normalizeRadians(this.toRadians())
+}
+
+public fun Double.normalize(): Double {
+    return normalizeDegrees(this)
+}
+
+public fun Double.mirror(mirror: Boolean = true): Double {
+    if (!mirror) return this
+    return (180 - this).normalize()
+}
+
+public fun Double.mirrorRadians(): Double {
+    return (Math.PI - this).normalizeRadians()
+}
+
+public fun Pose.mirror(mirror: Boolean = true): Pose {
+    if (!mirror) return this
+    return mirror()
+}
