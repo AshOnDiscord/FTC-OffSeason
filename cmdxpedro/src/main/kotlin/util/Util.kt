@@ -6,6 +6,7 @@ import com.millburnx.cmdxpedro.util.geometry.vector.Vec2f
 import com.millburnx.cmdxpedro.util.geometry.vector.Vec2i
 import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeDegrees
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -43,20 +44,12 @@ public fun Vec2d.mirror(mirror: Boolean = true): Vec2d {
     return Vec2d(144.0 - this.x, this.y)
 }
 
-public fun normalizeRadians(radians: Double): Double {
-    return atan2(sin(radians), cos(radians))
-}
-
-public fun normalizeDegrees(degrees: Double): Double {
-    return normalizeRadians(degrees.toRadians()).toDegrees()
-}
-
 public fun Double.normalizeRadians(): Double {
-    return normalizeRadians(this.toRadians())
+    return atan2(sin(this), cos(this))
 }
 
 public fun Double.normalize(): Double {
-    return normalizeDegrees(this)
+    return this.toRadians().normalizeRadians().toDegrees()
 }
 
 public fun Double.mirror(mirror: Boolean = true): Double {
