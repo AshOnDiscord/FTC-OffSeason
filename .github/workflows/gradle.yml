@@ -40,6 +40,11 @@ jobs:
     - name: Maven Local Publish with Gradle Wrapper - CmdX
       run: ./gradlew cmdx:publishToMavenLocal
 
+    - name: Maven Local Publish with Gradle Wrapper - Util
+      run: ./gradlew util:publishToMavenLocal
+
+    - name: Maven Local Publish with Gradle Wrapper - PedroParser
+      run: ./gradlew pedroparser:publishToMavenLocal
 
     - name: Maven Local Publish with Gradle Wrapper - CmdXPedro
       run: ./gradlew cmdxpedro:publishToMavenLocal
