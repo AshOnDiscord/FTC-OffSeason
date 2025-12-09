@@ -1,7 +1,7 @@
 package com.millburnx.cmdxpedro.paths.heading
 
 import com.millburnx.cmdxpedro.util.mirror
-import com.millburnx.cmdxpedro.util.toRadians
+import com.millburnx.util.toRadians
 import com.pedropathing.paths.PathBuilder
 
 public class ConstantHeading(public val heading: Double) : HeadingInterpolation {

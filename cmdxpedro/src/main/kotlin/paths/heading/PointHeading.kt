@@ -1,7 +1,7 @@
 package com.millburnx.cmdxpedro.paths.heading
 
-import com.millburnx.cmdxpedro.util.geometry.vector.Vec2d
 import com.millburnx.cmdxpedro.util.mirror
+import com.millburnx.util.vector.Vec2d
 import com.pedropathing.paths.HeadingInterpolator
 import com.pedropathing.paths.PathBuilder
 

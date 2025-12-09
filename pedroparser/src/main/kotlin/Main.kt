@@ -1,5 +1,6 @@
 package com.millburnx.pedroparser
 
+import com.millburnx.pedroparser.types.RawSequence
 import com.millburnx.pedroparser.types.Sequence
 import kotlinx.serialization.json.Json
 
@@ -16,5 +17,7 @@ public fun main() {
 
     val jsonText = inputStream.bufferedReader().use { it.readText() }
 
-    println(json.decodeFromString<Sequence>(jsonText))
+    val raw = json.decodeFromString<RawSequence>(jsonText)
+
+    println(Sequence.fromRaw(raw))
 }

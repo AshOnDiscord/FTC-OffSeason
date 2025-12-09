@@ -48,6 +48,7 @@ dependencies {
     compileOnly("androidx.appcompat:appcompat:1.2.0")
 
     implementation(project(":pedroparser"))
+    implementation(project(":util"))
 }
 
 kotlin {

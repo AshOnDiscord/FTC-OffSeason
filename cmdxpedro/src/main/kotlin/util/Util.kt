@@ -1,9 +1,12 @@
 package com.millburnx.cmdxpedro.util
 
 import com.millburnx.cmdx.Command
-import com.millburnx.cmdxpedro.util.geometry.vector.Vec2d
-import com.millburnx.cmdxpedro.util.geometry.vector.Vec2f
-import com.millburnx.cmdxpedro.util.geometry.vector.Vec2i
+import com.millburnx.util.Pose2d
+import com.millburnx.util.normalize
+import com.millburnx.util.normalizeRadians
+import com.millburnx.util.vector.Vec2d
+import com.millburnx.util.vector.Vec2f
+import com.millburnx.util.vector.Vec2i
 import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeDegrees
@@ -26,10 +29,6 @@ public suspend fun Command.SleepFor(earlyExit: () -> Boolean = { false }, ms: ()
     WaitFor { elapsedTime.milliseconds() >= ms() || earlyExit() }
 }
 
-public fun Double.toRadians(): Double = Math.toRadians(this)
-
-public fun Double.toDegrees(): Double = Math.toDegrees(this)
-
 public fun Vec2d.toPedro(): Pose = Pose(x, y)
 public fun Vec2f.toPedro(): Pose = Pose(x.toDouble(), y.toDouble())
 public fun Vec2i.toPedro(): Pose = Pose(x.toDouble(), y.toDouble())
@@ -42,14 +41,6 @@ public fun Pose2d.mirror(mirror: Boolean = true): Pose2d {
 public fun Vec2d.mirror(mirror: Boolean = true): Vec2d {
     if (!mirror) return this
     return Vec2d(144.0 - this.x, this.y)
-}
-
-public fun Double.normalizeRadians(): Double {
-    return atan2(sin(this), cos(this))
-}
-
-public fun Double.normalize(): Double {
-    return this.toRadians().normalizeRadians().toDegrees()
 }
 
 public fun Double.mirror(mirror: Boolean = true): Double {

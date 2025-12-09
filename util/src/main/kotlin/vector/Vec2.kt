@@ -1,4 +1,4 @@
-package com.millburnx.cmdxpedro.util.geometry.vector
+package com.millburnx.util.vector
 
 import java.io.Serializable
 

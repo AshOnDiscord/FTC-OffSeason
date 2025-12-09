@@ -16,10 +16,6 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
-
-    implementation(project(":util"))
-//    implementation("io.konform:konform:0.11.0")
 }
 
 tasks.test {
@@ -31,7 +27,7 @@ kotlin {
 }
 
 detekt {
-    config.from(files("$rootDir/pedroparser/detekt.yml"))
+    config.from(files("$rootDir/util/detekt.yml"))
     source.from(files("src/main/kotlin"))
 }
 
@@ -47,12 +43,12 @@ publishing {
             artifact(sourcesJar.get())
 
             groupId = "com.millburnx"
-            artifactId = "pedroparser"
+            artifactId = "util"
             version = "0.1.0"
 
             pom {
-                name = "Pedro Parser"
-                description = "Parser for Pedro Visualizer saves"
+                name = "Util"
+                description = "Util functionality"
                 url = "https://github.com/AshOnDiscord/FTC-OffSeason"
             }
         }

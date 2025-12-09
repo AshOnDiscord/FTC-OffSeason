@@ -1,4 +1,4 @@
-package com.millburnx.cmdxpedro.util.geometry.vector
+package com.millburnx.util.vector
 
 import kotlin.math.absoluteValue
 import kotlin.math.atan2

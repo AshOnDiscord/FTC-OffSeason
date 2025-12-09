@@ -1,8 +1,7 @@
-package com.millburnx.cmdxpedro.util
+package com.millburnx.util
 
-import com.millburnx.cmdxpedro.util.geometry.vector.Vec2
-import com.millburnx.cmdxpedro.util.geometry.vector.Vec2d
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeDegrees
+import com.millburnx.util.vector.Vec2
+import com.millburnx.util.vector.Vec2d
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
@@ -45,12 +44,12 @@ public data class Pose2d(
     public fun abs(): Pose2d = Pose2d(position.abs(), heading.absoluteValue)
 
     public operator fun plus(other: Pose2d): Pose2d =
-        Pose2d(position + other.position, normalizeDegrees(heading + other.heading))
+        Pose2d(position + other.position, (heading + other.heading).normalize())
 
     public operator fun plus(other: Vec2<*, *>): Pose2d = Pose2d(position + other, heading)
 
     public operator fun minus(other: Pose2d): Pose2d =
-        Pose2d(position - other.position, normalizeDegrees(heading - other.heading))
+        Pose2d(position - other.position, (heading - other.heading).normalize())
 
     public operator fun minus(other: Vec2<*, *>): Pose2d = Pose2d(position - other, heading)
 
