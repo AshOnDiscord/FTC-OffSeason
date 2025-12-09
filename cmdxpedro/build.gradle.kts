@@ -46,6 +46,8 @@ dependencies {
     compileOnly("org.firstinspires.ftc:FtcCommon:11.0.0")
     compileOnly("org.firstinspires.ftc:Vision:11.0.0")
     compileOnly("androidx.appcompat:appcompat:1.2.0")
+
+    implementation(project(":pedroparser"))
 }
 
 kotlin {

@@ -1,12 +1,13 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version "2.2.21"
     `maven-publish`
     id("org.jetbrains.dokka") version "2.0.0"
     id("io.gitlab.arturbosch.detekt") version ("1.23.8")
 }
 
 group = "com.millburnx"
-version = "0.1.2"
+version = "0.1.0"
 
 repositories {
     mavenLocal()
@@ -15,14 +16,12 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 }
 
 tasks.test {
     useJUnitPlatform()
 }
-
 kotlin {
     jvmToolchain(21)
     explicitApi()
@@ -45,12 +44,12 @@ publishing {
             artifact(sourcesJar.get())
 
             groupId = "com.millburnx"
-            artifactId = "cmdx"
-            version = "0.1.2"
+            artifactId = "pedroparser"
+            version = "0.1.0"
 
             pom {
-                name = "CmdX"
-                description = "A FTC Orientated Kotlin library for creating complex performant command-based systems"
+                name = "Pedro Parser"
+                description = "Parser for Pedro Visualizer saves"
                 url = "https://github.com/AshOnDiscord/FTC-OffSeason"
             }
         }
