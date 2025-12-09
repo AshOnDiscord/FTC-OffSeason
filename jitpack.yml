@@ -3,7 +3,7 @@ jdk:
 
 install:
   - ./gradlew clean
-  - ./gradlew :cmdx:publishToMavenLocal
-  - ./gradlew :cmdxpedro:publishToMavenLocal
-  - ./gradlew :pedroparser:publishToMavenLocal
   - ./gradlew :util:publishToMavenLocal
+  - ./gradlew :cmdx:publishToMavenLocal
+  - ./gradlew :pedroparser:publishToMavenLocal
+  - ./gradlew :cmdxpedro:publishToMavenLocal
