@@ -4,7 +4,7 @@ import com.millburnx.cmdxpedro.util.mirror
 import com.millburnx.util.toRadians
 import com.pedropathing.paths.PathBuilder
 
-public class LinearHeading(public val startingHeading: Double, public val endingHeading: Double) :
+public data class LinearHeading(public val startingHeading: Double, public val endingHeading: Double) :
     HeadingInterpolation {
     override fun register(pathBuilder: PathBuilder, mirrored: Boolean): PathBuilder =
         pathBuilder.apply {

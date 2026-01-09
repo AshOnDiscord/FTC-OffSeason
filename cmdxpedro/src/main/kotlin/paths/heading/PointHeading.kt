@@ -5,7 +5,7 @@ import com.millburnx.util.vector.Vec2d
 import com.pedropathing.paths.HeadingInterpolator
 import com.pedropathing.paths.PathBuilder
 
-public class PointHeading(public val targetPoint: Vec2d) : HeadingInterpolation {
+public data class PointHeading(public val targetPoint: Vec2d) : HeadingInterpolation {
     override fun register(pathBuilder: PathBuilder, mirrored: Boolean): PathBuilder =
         pathBuilder.apply {
             val point = targetPoint.mirror(mirrored)

@@ -6,7 +6,7 @@ import com.millburnx.util.vector.Vec2d
 import com.pedropathing.geometry.BezierLine
 import com.pedropathing.paths.PathBuilder
 
-public class Line(public val starting: Vec2d, public val ending: Vec2d) : Path {
+public data class Line(public val starting: Vec2d, public val ending: Vec2d) : Path {
     override fun register(pathBuilder: PathBuilder, mirrored: Boolean): PathBuilder =
         pathBuilder.apply {
             addPath(

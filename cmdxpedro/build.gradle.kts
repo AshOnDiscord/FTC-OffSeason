@@ -34,7 +34,7 @@ android {
 
 dependencies {
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-    compileOnly("com.pedropathing:ftc:2.0.3")
+    compileOnly("com.pedropathing:ftc:2.0.4")
     compileOnly(project(":cmdx"))
 
     compileOnly("org.firstinspires.ftc:Inspection:11.0.0")
