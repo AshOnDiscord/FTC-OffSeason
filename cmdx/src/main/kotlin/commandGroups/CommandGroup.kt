@@ -4,14 +4,13 @@ import com.millburnx.cmdx.Command
 import com.millburnx.cmdx.CommandID
 import com.millburnx.cmdx.ICommand
 import com.millburnx.cmdx.NonSyncableCommand
+import com.millburnx.cmdx.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.Collections
-import kotlin.collections.forEach
+import java.util.*
 
 public abstract class CommandGroup(
     public override val name: String,
@@ -96,11 +95,11 @@ public abstract class CommandGroup(
     }
 
     internal suspend fun syncChild(child: ICommand) {
-        println("Job ${child.name} (${child.id}) reached sync point")
+        Settings.verboseLog("Job ${child.name} (${child.id}) reached sync point")
         val waiting = mutex.withLock {
             if (isReady(child.id)) {
                 // alert others
-                println("All others are ready, ${child.id} is notifying others")
+                Settings.verboseLog("All others are ready, ${child.id} is notifying others")
 
                 // trigger onsync callback first
                 onSync()
@@ -126,17 +125,17 @@ public abstract class CommandGroup(
                 waiting.close()
             }
         }
-        println("Job ${child.name} (${child.id}) resumed after sync")
+        Settings.verboseLog("Job ${child.name} (${child.id}) resumed after sync")
     }
 
     public suspend fun cleanUp(command: ICommand) {
-        println("Job ${command.name} (${command.id}) beginning clean up")
+        Settings.verboseLog("Job ${command.name} (${command.id}) beginning clean up")
         mutex.withLock {
             commandList.remove(command.id)
             channels.remove(command.id)
 
             if (isReady(command.id) && commandList.isNotEmpty()) {
-                println("Job ${command.id} is holding others up, notifying others")
+                Settings.verboseLog("Job ${command.id} is holding others up, notifying others")
                 // notify others
 //                channels.entries.toList().forEach {
                 onSync()
@@ -147,7 +146,7 @@ public abstract class CommandGroup(
                 }
             }
         }
-        println("Job ${command.name} (${command.id}) cleared")
+        Settings.debugLog("Job ${command.name} (${command.id}) cleared")
     }
 
     public abstract override suspend fun run(scope: CoroutineScope)

@@ -28,7 +28,7 @@ public class CommandScheduler(
             try {
                 command.run(this)
             } catch (e: Throwable) {
-                println(e)
+                System.err.println(e)
             }
         }
     }

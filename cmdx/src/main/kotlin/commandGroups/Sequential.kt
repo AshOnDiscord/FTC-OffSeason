@@ -1,5 +1,6 @@
 package com.millburnx.cmdx.commandGroups
 
+import com.millburnx.cmdx.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.isActive
 
@@ -13,7 +14,7 @@ public class Sequential(
 
     public override suspend fun run(scope: CoroutineScope) {
         currentScope = scope
-        println("Running Sequential Command Group: $name")
+        Settings.debugLog("Running Sequential Command Group: $name")
         for (command in _commands) {
             if (!scope.isActive) {
                 cancel()
@@ -21,6 +22,6 @@ public class Sequential(
             }
             command.run(scope)
         }
-        println("Sequential Command Group $name completed.")
+        Settings.debugLog("Sequential Command Group $name completed.")
     }
 }

@@ -4,9 +4,7 @@ import com.millburnx.cmdx.commandGroups.CommandGroup
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.withLock
 
 public interface ICommand {
@@ -43,13 +41,13 @@ public open class Command(
                     parentGroup?.mutex?.withLock {
                         parentGroup?.commandList?.add(id)
                     }
-                    println("Command: $name started.")
+                    Settings.debugLog("Command: $name started.")
                     runnable()
                 } catch (e: CancellationException) {
-                    println("Command $name canceled.")
+                    Settings.debugLog("Command $name canceled.")
                     onCancel()
                 } finally {
-                    println("Command $name completed.")
+                    Settings.debugLog("Command $name completed.")
                     parentGroup?.cleanUp(this@Command)
                 }
             }
