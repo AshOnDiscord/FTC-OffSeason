@@ -44,7 +44,8 @@ public class PedroBuilder(public val isMirrored: Boolean = false) {
         headingInterpolation: HeadingInterpolation,
         opModeIsActive: () -> Boolean,
         bypassPositionMirror: Boolean = false,
-        bypassHeadingMirror: Boolean = false
+        bypassHeadingMirror: Boolean = false,
+        maxPower: Double = 1.0
     ): Command {
         return FollowPath(
             follower,
@@ -55,6 +56,7 @@ public class PedroBuilder(public val isMirrored: Boolean = false) {
                 bypassPositionMirror,
                 bypassHeadingMirror
             ),
+            maxPower,
             opModeIsActive,
         )
     }

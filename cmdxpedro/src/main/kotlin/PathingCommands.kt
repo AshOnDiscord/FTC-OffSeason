@@ -5,8 +5,8 @@ import com.millburnx.cmdxpedro.util.WaitFor
 import com.pedropathing.follower.Follower
 import com.pedropathing.paths.PathChain
 
-public fun FollowPath(follower: Follower, path: PathChain, opModeIsActive: () -> Boolean): Command = Command() {
-    follower.followPath(path)
+public fun FollowPath(follower: Follower, path: PathChain, maxPower:Double, opModeIsActive: () -> Boolean): Command = Command() {
+    follower.followPath(path, maxPower, true)
     WaitFor { !opModeIsActive() || !(follower.isBusy) }
 }
 
