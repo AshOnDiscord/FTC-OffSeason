@@ -5,6 +5,7 @@ import com.millburnx.cmdxpedro.util.WaitFor
 import com.pedropathing.follower.Follower
 import com.pedropathing.paths.PathChain
 
+@Suppress("ktlint:standard:function-naming")
 public fun FollowPath(
     follower: Follower,
     path: PathChain,
@@ -22,6 +23,7 @@ public fun FollowPath(
         }
     }
 
+@Suppress("ktlint:standard:function-naming")
 public fun TurnTo(
     follower: Follower,
     degrees: Double,

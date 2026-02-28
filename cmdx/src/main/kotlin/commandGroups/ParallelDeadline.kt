@@ -1,15 +1,15 @@
 package com.millburnx.cmdx.commandGroups
 
-import com.millburnx.cmdx.Command
+import com.millburnx.cmdx.ICommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 public class ParallelDeadline(
     name: String,
-    public val deadline: Command,
+    public val deadline: ICommand,
     public val block: ParallelDeadline.() -> Unit,
 ) : CommandGroup(name) {
-    public constructor(deadline: Command, block: ParallelDeadline.() -> Unit) :
+    public constructor(deadline: ICommand, block: ParallelDeadline.() -> Unit) :
         this("Unnamed ParallelDeadline", deadline, block)
 
     init {
