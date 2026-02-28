@@ -5,6 +5,7 @@ import com.millburnx.cmdxpedro.FollowPath
 import com.millburnx.cmdxpedro.paths.heading.HeadingInterpolation
 import com.millburnx.cmdxpedro.paths.path.Path
 import com.pedropathing.follower.Follower
+import com.pedropathing.paths.PathBuilder
 import com.pedropathing.paths.PathChain
 
 /**
@@ -21,22 +22,25 @@ import com.pedropathing.paths.PathChain
  * ```
  */
 @Suppress("FunctionName") // Function names are uppercased so they are identical to constructors
-public class PedroBuilder(public val isMirrored: Boolean = false) {
+public class PedroBuilder(
+    public val isMirrored: Boolean = false,
+) {
     public fun Path(
         follower: Follower,
         path: Path,
         headingInterpolation: HeadingInterpolation,
         bypassPositionMirror: Boolean = false,
-        bypassHeadingMirror: Boolean = false
-    ): PathChain {
-        return PedroPath(
+        bypassHeadingMirror: Boolean = false,
+        pathCallback: (PathBuilder) -> Unit = {},
+    ): PathChain =
+        PedroPath(
             follower,
             path,
             headingInterpolation,
             if (bypassPositionMirror) false else isMirrored,
-            if (bypassHeadingMirror) false else isMirrored
+            if (bypassHeadingMirror) false else isMirrored,
+            pathCallback,
         )
-    }
 
     public fun PathCommand(
         follower: Follower,
@@ -45,19 +49,20 @@ public class PedroBuilder(public val isMirrored: Boolean = false) {
         opModeIsActive: () -> Boolean,
         bypassPositionMirror: Boolean = false,
         bypassHeadingMirror: Boolean = false,
-        maxPower: Double = 1.0
-    ): Command {
-        return FollowPath(
+        maxPower: Double = 1.0,
+        pathCallback: (PathBuilder) -> Unit = {},
+    ): Command =
+        FollowPath(
             follower,
             Path(
                 follower,
                 path,
                 headingInterpolation,
                 bypassPositionMirror,
-                bypassHeadingMirror
+                bypassHeadingMirror,
+                pathCallback,
             ),
             maxPower,
             opModeIsActive,
         )
-    }
 }
