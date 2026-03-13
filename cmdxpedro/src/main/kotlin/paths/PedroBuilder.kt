@@ -42,6 +42,32 @@ public class PedroBuilder(
             pathCallback,
         )
 
+    public fun Path(
+        follower: Follower,
+        path: PedroPathData,
+        bypassPositionMirror: Boolean = false,
+        bypassHeadingMirror: Boolean = false,
+    ): PathChain =
+        PedroPath(
+            follower,
+            path,
+            if (bypassPositionMirror) false else isMirrored,
+            if (bypassHeadingMirror) false else isMirrored,
+        )
+
+    public fun Path(
+        follower: Follower,
+        pathChain: List<PedroPathData>,
+        bypassPositionMirror: Boolean = false,
+        bypassHeadingMirror: Boolean = false,
+    ): PathChain =
+        PedroPath(
+            follower,
+            pathChain,
+            if (bypassPositionMirror) false else isMirrored,
+            if (bypassHeadingMirror) false else isMirrored,
+        )
+
     public fun PathCommand(
         follower: Follower,
         path: Path,
@@ -61,6 +87,26 @@ public class PedroBuilder(
                 bypassPositionMirror,
                 bypassHeadingMirror,
                 pathCallback,
+            ),
+            maxPower,
+            opModeIsActive,
+        )
+
+    public fun PathCommand(
+        follower: Follower,
+        pathChain: List<PedroPathData>,
+        opModeIsActive: () -> Boolean,
+        bypassPositionMirror: Boolean = false,
+        bypassHeadingMirror: Boolean = false,
+        maxPower: Double = 1.0,
+    ): Command =
+        FollowPath(
+            follower,
+            Path(
+                follower,
+                pathChain,
+                bypassPositionMirror,
+                bypassHeadingMirror,
             ),
             maxPower,
             opModeIsActive,

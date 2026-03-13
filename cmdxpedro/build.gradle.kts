@@ -29,8 +29,11 @@ android {
     }
 
     compileSdk = 34
-}
 
+    defaultConfig {
+        minSdk = 24
+    }
+}
 
 dependencies {
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
@@ -55,7 +58,6 @@ kotlin {
     jvmToolchain(21)
     explicitApi()
 }
-
 
 detekt {
     config.from(files("$rootDir/cmdxpedro/detekt.yml"))
